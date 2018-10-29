@@ -32,6 +32,14 @@
 		</plugins>
 	</build>
 
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+	</dependencies>
+
 	<modules>
 		<module>pet-clinic-data</module>
 		<module>pet-clinic-web</module>
