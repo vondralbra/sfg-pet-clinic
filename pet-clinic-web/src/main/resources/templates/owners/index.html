@@ -1,17 +1,19 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{fragments/layout :: layout (~{::body},'home')}">
 <head>
 <meta charset="ISO-8859-1">
 <title>List of Owners</title>
 </head>
 <body>
-	<h1 th:text="'List of Owners'">Index Page</h1>
-	<table>
+
+	<h2 th:text="#{owner.list}">Hoffe das wird nicht angezeigt.</h2>
+	<table class="table table-striped">
 		<thead>
 			<tr>
-				<th>ID</th>
-				<th>First Name</th>
-				<th>Last Name</th>
+				<th style="width: 150px;">ID</th>
+				<th style="width: 150px;">First Name</th>
+				<th style="width: 150px;">Last Name</th>
 			</tr>
 		</thead>
 		<tbody>
