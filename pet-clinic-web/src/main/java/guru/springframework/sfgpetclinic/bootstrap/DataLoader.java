@@ -30,46 +30,54 @@ public class DataLoader implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		PetType dog = createPetType("dog");
-		PetType cat = createPetType("cat");
+		System.out.println("Creating (and saving) petTypes...");
+		PetType dogType = createAndSavePetType("dog");
+		PetType catType = createAndSavePetType("cat");
+		System.out.println("Created petTypes.");
 
-		Owner max = createOwner("Max", "Schmeling", "Boxgasse 1", "Berlin", "+4754145");
-		Owner mimi = createOwner("Mimi", "Rogers", "Holywood Blvd", "Los Angeles", "+4754145");
+		System.out.println("Creating owners...");
+		Owner maximilian = createOwner("Max", "Schmeling", "Boxgasse 1", "Berlin", "+4754145");
+		Owner mimi = createOwner("Mimi", "Rogers", "Holywood Blvd", "Los Angeles", "+112345678");
+		System.out.println("Created owners.");
 
-		System.out.println("Loaded owners...");
-		Vet vet1 = createVeh("Sam", "Axe");
-		Vet vet2 = createVeh("Karl", "Klammer");
+		System.out.println("Creating pets...");
+		createPet("Bronko", dogType, maximilian);
+		createPet("Cleo", catType, mimi);
+		System.out.println("Created pets.");
 
-		Pet maxsPet = new Pet();
-		maxsPet.setName("Bronco");
-		maxsPet.setBirthday(LocalDate.now());
-		maxsPet.setPetType(dog);
-		maxsPet.setOwner(max);
-		max.getPets().add(maxsPet);
+		ownerService.save(maximilian);
+		ownerService.save(mimi);
 
-		Pet mimisPet = new Pet();
-		mimisPet.setName("Cleo");
-		mimisPet.setBirthday(LocalDate.now());
-		mimisPet.setPetType(cat);
-		mimisPet.setOwner(mimi);
-		mimi.getPets().add(mimisPet);
-
-		System.out.println("Loaded vets...");
+		System.out.println("Creating vets...");
+		Vet vet1 = createVet("Sam", "Axe");
+		Vet vet2 = createVet("Karl", "Klammer");
+		vetService.save(vet1);
+		vetService.save(vet2);
+		System.out.println("Created vets.");
 
 	}
 
-	private PetType createPetType(String name) {
+	private Pet createPet(String name, PetType petType, Owner owner) {
+		Pet pet = new Pet();
+		pet.setName(name);
+		pet.setBirthday(LocalDate.now());
+		pet.setPetType(petType);
+		pet.setOwner(owner);
+		owner.getPets().add(pet);
+		return pet;
+	}
+
+	private PetType createAndSavePetType(String name) {
 		PetType petType = new PetType();
 		petType.setName(name);
 		PetType savedPetType = petTypeService.save(petType);
 		return savedPetType;
 	}
 
-	private Vet createVeh(String firstName, String lastName) {
+	private Vet createVet(String firstName, String lastName) {
 		Vet vet = new Vet();
 		vet.setFirstName(firstName);
 		vet.setLastName(lastName);
-		vetService.save(vet);
 		return vet;
 	}
 
@@ -80,7 +88,6 @@ public class DataLoader implements CommandLineRunner {
 		owner.setAddress(address);
 		owner.setCity(city);
 		owner.setTelephone(telephone);
-		ownerService.save(owner);
 		return owner;
 	}
 
