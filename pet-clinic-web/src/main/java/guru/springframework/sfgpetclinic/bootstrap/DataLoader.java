@@ -11,10 +11,12 @@ import guru.springframework.sfgpetclinic.model.Pet;
 import guru.springframework.sfgpetclinic.model.PetType;
 import guru.springframework.sfgpetclinic.model.Speciality;
 import guru.springframework.sfgpetclinic.model.Vet;
+import guru.springframework.sfgpetclinic.model.Visit;
 import guru.springframework.sfgpetclinic.services.OwnerService;
 import guru.springframework.sfgpetclinic.services.PetTypeService;
 import guru.springframework.sfgpetclinic.services.SpecialityService;
 import guru.springframework.sfgpetclinic.services.VetService;
+import guru.springframework.sfgpetclinic.services.VisitService;
 
 @Component
 public class DataLoader implements CommandLineRunner {
@@ -23,14 +25,16 @@ public class DataLoader implements CommandLineRunner {
 	private final VetService vetService;
 	private final PetTypeService petTypeService;
 	private final SpecialityService specialityService;
+	private final VisitService visitService;
 
 	public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService,
-			SpecialityService specialityService) {
+			SpecialityService specialityService, VisitService visitService) {
 		super();
 		this.ownerService = ownerService;
 		this.vetService = vetService;
 		this.petTypeService = petTypeService;
 		this.specialityService = specialityService;
+		this.visitService = visitService;
 
 	}
 
@@ -55,24 +59,30 @@ public class DataLoader implements CommandLineRunner {
 		printIds(dogType, catType);
 
 		System.out.println("Creating owners...");
-		Owner owner1 = createOwner("Max", "Schmeling", "Boxgasse 1", "Berlin", "+4754145");
-		Owner owner2 = createOwner("Mimi", "Rogers", "Holywood Blvd", "Los Angeles", "+112345678");
+		Owner max = createOwner("Max", "Schmeling", "Boxgasse 1", "Berlin", "+4754145");
+		Owner fiona = createOwner("Fiona", "Rogers", "Holywood Blvd", "Los Angeles", "+112345678");
 		System.out.println("Created owners.");
 
-		printIds(owner1, owner1);
+		printIds(max, max);
 
 		System.out.println("Creating pets...");
-		Pet pet1 = createPet("Bronko", dogType, owner1);
-		Pet pet2 = createPet("Cleo", catType, owner2);
+		Pet maxDog = createPet("Bronko", dogType, max);
+		Pet fionasCat = createPet("Cleo", catType, fiona);
 		System.out.println("Created pets.");
-		printIds(owner1, owner1, pet1, pet2);
+		printIds(max, max, maxDog, fionasCat);
 
 		System.out.println("Saving owners (with their pets)...");
-		ownerService.save(owner1);
-		ownerService.save(owner2);
+		ownerService.save(max);
+		ownerService.save(fiona);
 		System.out.println("Saved owners.");
-		printIds(owner1, owner1, pet1, pet2);
+		printIds(max, fiona, maxDog, fionasCat);
 
+		Visit visit = new Visit();
+		visit.setDate(LocalDate.now());
+		visit.setDescription("Sneezy Kitty");
+		visit.setPet(fionasCat);
+		visitService.save(visit);
+		printIds(visit);
 		Speciality speciality1 = createSpeciality("Radiology");
 		Speciality speciality2 = createSpeciality("Surgery");
 		Speciality speciality3 = createSpeciality("Dentistry");
