@@ -112,7 +112,7 @@ public class DataLoader implements CommandLineRunner {
 	private Speciality createSpeciality(String description) {
 		Speciality speciality = new Speciality();
 		speciality.setDescription(description);
-		return speciality;
+		return specialityService.save(speciality);
 	}
 
 	private Pet createPet(String name, PetType petType, Owner owner) {
