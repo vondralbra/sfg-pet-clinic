@@ -17,7 +17,9 @@ import guru.springframework.sfgpetclinic.services.PetTypeService;
 import guru.springframework.sfgpetclinic.services.SpecialityService;
 import guru.springframework.sfgpetclinic.services.VetService;
 import guru.springframework.sfgpetclinic.services.VisitService;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class DataLoader implements CommandLineRunner {
 
@@ -43,38 +45,39 @@ public class DataLoader implements CommandLineRunner {
 
 		int petTypeCount = petTypeService.findAll().size();
 		if (petTypeCount == 0) {
-			System.out.println("Loading data....");
+			log.info("Loading data....");
+			log.info("Loading data....");
 			loadData();
-			System.out.println("Data loaded");
+			log.info("Data loaded");
 		}
 
 	}
 
 	private void loadData() {
-		System.out.println("Creating (and saving) petTypes...");
+		log.info("Creating (and saving) petTypes...");
 		PetType dogType = createAndSavePetType("dog");
 		PetType catType = createAndSavePetType("cat");
-		System.out.println("Created petTypes.");
+		log.info("Created petTypes.");
 
 		printIds(dogType, catType);
 
-		System.out.println("Creating owners...");
+		log.info("Creating owners...");
 		Owner max = createOwner("Max", "Schmeling", "Boxgasse 1", "Berlin", "+4754145");
 		Owner fiona = createOwner("Fiona", "Rogers", "Holywood Blvd", "Los Angeles", "+112345678");
-		System.out.println("Created owners.");
+		log.info("Created owners.");
 
 		printIds(max, max);
 
-		System.out.println("Creating pets...");
+		log.info("Creating pets...");
 		Pet maxDog = createPet("Bronko", dogType, max);
 		Pet fionasCat = createPet("Cleo", catType, fiona);
-		System.out.println("Created pets.");
+		log.info("Created pets.");
 		printIds(max, max, maxDog, fionasCat);
 
-		System.out.println("Saving owners (with their pets)...");
+		log.info("Saving owners (with their pets)...");
 		ownerService.save(max);
 		ownerService.save(fiona);
-		System.out.println("Saved owners.");
+		log.info("Saved owners.");
 		printIds(max, fiona, maxDog, fionasCat);
 
 		Visit visit = new Visit();
@@ -88,23 +91,23 @@ public class DataLoader implements CommandLineRunner {
 		Speciality speciality3 = createSpeciality("Dentistry");
 		printIds(speciality1, speciality2, speciality3);
 
-		System.out.println("Creating vets...");
+		log.info("Creating vets...");
 		Vet vet1 = createVet("Sam", "Axe", speciality1);
 		Vet vet2 = createVet("Jessy", "Porter", speciality2);
-		System.out.println("Created vets.");
+		log.info("Created vets.");
 		printIds(vet1, vet2, speciality1, speciality2, speciality3);
 
-		System.out.println("Saving vets...");
+		log.info("Saving vets...");
 		vetService.save(vet1);
 		vetService.save(vet2);
 		printIds(vet1, vet2, speciality1, speciality2, speciality3);
-		System.out.println("Saved vets.");
+		log.info("Saved vets.");
 
 	}
 
 	private void printIds(BaseEntity... entities) {
 		for (int i = 0; i < entities.length; i++) {
-			System.out.println(entities[i].getClass().getSimpleName() + " " + entities[i].getId());
+			log.info(entities[i].getClass().getSimpleName() + " " + entities[i].getId());
 		}
 
 	}
